@@ -1,41 +1,63 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-class Clock extends React.Component{
+function UserGreeting(props) {
+  return <h1>Welcome back!</h1>;
+}
+
+function GuestGreeting(props) {
+  return <h1>Please sign up.</h1>;
+}
+
+function Greeting(props) {
+  const isLoggedIn = props.isLoggedIn;
+  if (isLoggedIn) {
+    return <UserGreeting />;
+  }
+  return <GuestGreeting />;
+}
+function LoginButton(props) {
+  return (
+    <button onClick={props.onClick}>Login</button>
+  );
+}
+
+function LogoutButton(props) {
+  return (
+    <button onClick={props.onClick}>Logout</button>
+  );
+}
+class LoginControl extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: 'Tom',
-      age: 25,
-      date: new Date()
-    }
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.handleLogoutClick = this.handleLogoutClick.bind(this);
+    this.state = {isLoggedIn: false};
+  }
+  handleLoginClick() {
+    this.setState({isLoggedIn: true});
+  }
+  handleLogoutClick() {
+    this.setState({isLoggedIn: false});
   }
   render() {
+    const isLoggedIn = this.state.isLoggedIn;
+    let button = null;
+    if (isLoggedIn) {
+      button = <LogoutButton onClick={this.handleLogoutClick} />;
+    } else {
+      button = <LoginButton onClick={this.handleLoginClick} />;
+    }
     return (
       <div>
-        <h1>Hello,{this.state.name},{this.state.age}</h1>
-        <h2>Hello,{this.props.name},{this.props.age}</h2>
-        <h2>Time is {this.state.date.toLocaleTimeString()}</h2>
+        <Greeting isLoggedIn={isLoggedIn} />
+        {button}
       </div>
-    )
-  }
-  componentDidMount() {
-    this.timerID = setInterval(
-      () => this.tick(),
-      1000
     );
-  }
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-  tick() {
-    this.setState({
-      date: new Date()
-    });
   }
 }
 
-
-const element = <Clock name="Jack" age="36"></Clock>
-
-ReactDOM.render(element, document.getElementById('box'))
+ReactDOM.render(
+  <LoginControl />,
+  document.getElementById('box')
+);

@@ -23,9 +23,7 @@ function clickHandler() {
 }
 const element = (
   <div>
-    <h1 className="red" onClick={clickHandler}>
-      {msg}
-    </h1>
+    <h1 className="red" onClick={clickHandler}>{msg}</h1>
     <h1 style={blue}>Hello, {formatName(user)}!</h1>
     {arr.map(item => {
       return <div>Hello, {item.name}!</div>
