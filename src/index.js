@@ -1,63 +1,38 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-function UserGreeting(props) {
-  return <h1>Welcome back!</h1>;
-}
-
-function GuestGreeting(props) {
-  return <h1>Please sign up.</h1>;
-}
-
-function Greeting(props) {
-  const isLoggedIn = props.isLoggedIn;
-  if (isLoggedIn) {
-    return <UserGreeting />;
-  }
-  return <GuestGreeting />;
-}
-function LoginButton(props) {
-  return (
-    <button onClick={props.onClick}>Login</button>
-  );
-}
-
-function LogoutButton(props) {
-  return (
-    <button onClick={props.onClick}>Logout</button>
-  );
-}
-class LoginControl extends React.Component {
+class NewForm extends React.Component{
   constructor(props) {
     super(props);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
-    this.handleLogoutClick = this.handleLogoutClick.bind(this);
-    this.state = {isLoggedIn: false};
+    this.state = {value: '', value1: '选择2'}
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.changSelect = this.changSelect.bind(this)
   }
-  handleLoginClick() {
-    this.setState({isLoggedIn: true});
+
+  handleChange(event) {
+    this.setState({value : event.target.value})
   }
-  handleLogoutClick() {
-    this.setState({isLoggedIn: false});
+  changSelect(event) {
+    this.setState({value1 : event.target.value})
+  }
+  handleSubmit(event) {
+    alert('提交了' + this.state.value1)
+    event.preventDefault();   
   }
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    let button = null;
-    if (isLoggedIn) {
-      button = <LogoutButton onClick={this.handleLogoutClick} />;
-    } else {
-      button = <LoginButton onClick={this.handleLoginClick} />;
-    }
-    return (
-      <div>
-        <Greeting isLoggedIn={isLoggedIn} />
-        {button}
-      </div>
-    );
+    return(
+      <form onSubmit={this.handleSubmit}>
+        <input type="text" value={this.state.value} onChange={this.handleChange} />
+        <input type="submit" value="提交" />
+        <select value={this.state.value1} onChange={this.changSelect}>
+          <option value="选择1">选择1</option>
+          <option value="选择2">选择2</option>
+          <option value="选择3">选择3</option>
+        </select>
+      </form>
+    )
   }
 }
 
-ReactDOM.render(
-  <LoginControl />,
-  document.getElementById('box')
-);
+ReactDOM.render(<NewForm></NewForm>, document.getElementById('box'))
