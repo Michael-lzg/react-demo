@@ -1,38 +1,41 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-class NewForm extends React.Component{
-  constructor(props) {
-    super(props);
-    this.state = {value: '', value1: '选择2'}
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.changSelect = this.changSelect.bind(this)
-  }
-
-  handleChange(event) {
-    this.setState({value : event.target.value})
-  }
-  changSelect(event) {
-    this.setState({value1 : event.target.value})
-  }
-  handleSubmit(event) {
-    alert('提交了' + this.state.value1)
-    event.preventDefault();   
-  }
-  render() {
-    return(
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" value={this.state.value} onChange={this.handleChange} />
-        <input type="submit" value="提交" />
-        <select value={this.state.value1} onChange={this.changSelect}>
-          <option value="选择1">选择1</option>
-          <option value="选择2">选择2</option>
-          <option value="选择3">选择3</option>
-        </select>
-      </form>
-    )
+const MyComponent = {
+  DatePicker: (props) => {
+    return <div>看看是什么颜色{props.color}</div>
   }
 }
 
-ReactDOM.render(<NewForm></NewForm>, document.getElementById('box'))
+function BlueDatePicker() {
+  return <MyComponent.DatePicker color="blue" />
+}
+
+function NumberDescriber(props) {
+  let description;
+  if (props.number % 2 == 0) {
+    description = <strong>even</strong>;
+  } else {
+    description = <i>odd</i>;
+  }
+  return <div>{props.number} is an {description} number</div>;
+}
+
+function Item(props) {
+  return <div>{props.message}</div>
+}
+function TodoList() {
+  const lists = ['Jack','Tom', 'Mike'];
+  return (<div>
+    {lists.map((message) => {
+      return <Item key={message} message={message}></Item>
+    })}
+  </div>)
+}
+
+const element = <div>
+<BlueDatePicker></BlueDatePicker>
+<NumberDescriber number="18"></NumberDescriber>
+<TodoList></TodoList>
+</div>
+ReactDOM.render(element , document.getElementById('box'))
