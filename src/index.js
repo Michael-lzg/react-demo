@@ -1,55 +1,67 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import { createStore } from 'redux'
+import { combineReducers } from 'redux'
 
-class App extends React.Component{
-  render() {
-    return (
-      <div>
-        <h1>App</h1>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/inbox">Inbox</Link></li>
-        </ul>
-        {this.props.children}
-      </div>
-    )
+const productsReducer = function(state = [], action) {
+  return state
+}
+
+const initialState = {
+  cart: [
+    {
+      product: 'bread 700g',
+      quantity: 2,
+      unitCost: 90
+    },
+    {
+      product: 'milk 500ml',
+      quantity: 1,
+      unitCost: 47
+    }
+  ]
+}
+
+const ADD_TO_CART = 'ADD_TO_CART'
+
+const cartReducer = function(state = initialState, action) {
+  switch (action.type) {
+    case ADD_TO_CART: {
+      return {
+        ...state,
+        cart: [...state.cart, action.payload]
+      }
+    }
+
+    default:
+      return state
   }
 }
-class Home extends React.Component{
-  render() {
-    return <h3>Home</h3>
+
+function addToCart(product, quantity, unitCost) {
+  return {
+    type: ADD_TO_CART,
+    payload: {
+      product,
+      quantity,
+      unitCost
+    }
   }
 }
-class About extends React.Component{
-  render() {
-    return <h3>About</h3>
-  }
+
+const allReducers = {
+  products: productsReducer,
+  shoppingCart: cartReducer
 }
-const Inbox = ({ match }) => (
-  <div>
-    <h2>Topics</h2>
-    <div><Link to={`${match.url}/messages/react`}>Rendering with React</Link></div>
-    <div><Link to={`${match.url}/messages/java`}>Rendering with java</Link></div>
-    <Route path={`${match.url}/messages/:id`} component={Message}/>
-    <Route exact path={match.path} render={() => <h3>Please select a topic.</h3>}/>
-  </div>
-) 
 
-const Message = ({ match }) => (
-  <div>
-    <h3>new messages</h3>
-    <h3>{match.params.id}</h3>
-  </div>
-)
+const rootReducer = combineReducers(allReducers)
 
-ReactDOM.render((
-  <Router>
-    <App>
-      <Route exact path="/" component={Home} />
-      <Route path="/about" component={About} />
-      <Route path="/inbox" component={Inbox} />
-    </App>
-  </Router>
-), document.getElementById('box'))
+let store = createStore(rootReducer)
+
+console.log('initial state: ', store.getState())
+
+let unsubscribe = store.subscribe(() => console.log(store.getState()))
+
+store.dispatch(addToCart('Coffee 500gm', 1, 250))
+store.dispatch(addToCart('Flour 1kg', 2, 110))
+store.dispatch(addToCart('Juice 2L', 1, 250))
+
+unsubscribe()
